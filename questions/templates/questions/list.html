@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <div class='row'>
+
+    {% for obj in questions %}
+        <div class='col my-3'>
+        {{ obj.title }}  
+        
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
