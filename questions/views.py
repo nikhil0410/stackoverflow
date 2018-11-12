@@ -1,8 +1,8 @@
 from django.shortcuts import render,render_to_response,redirect
-from django.views.generic import CreateView
+from django.views.generic import CreateView,FormView, DetailView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login,authenticate,logout
-from django.views.generic import FormView
+
 
 from django.template import RequestContext
 
@@ -64,6 +64,57 @@ def login_user(request):
 
 
 class CreateQuestion(CreateView):
-    model = Question
-    fields = ['title','description']
-    template_name = 'questions/create-question.html'
+	model = Question
+	fields = ['title','description']
+	template_name = 'questions/create-question.html'
+
+
+class QuestionDetailView(DetailView):
+	template_name = 'questions/detail_view.html'
+	model = Question
+
+	def get_object(self,*args,**kwargs):
+		request = self.request 
+		slug = self.kwargs.get('slug')
+
+		try:
+			instance = Question.objects.filter(slug=slug).first()
+		except Question.DoesNotExist:
+			raise Http404('Question does not exist')
+		except Question.MultipleObjectReturned:
+			qs = Question.objects.filter(slug=slug)
+			instance = qs.first()
+		except :
+			raise http404('Dont know what you have done there')
+
+		# print(instance.values())
+		return instance
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
