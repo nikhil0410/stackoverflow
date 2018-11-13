@@ -12,8 +12,8 @@ class Answers(models.Model):
 	downvote_count		= models.IntegerField()
 	featured        	= models.BooleanField(default=False)
 	active          	= models.BooleanField(default=True)
-	timestamp      	 = models.DateTimeField(auto_now_add=True)
+	timestamp      	 	= models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
-		return self.question_id
+		return self.answer_description or ''
 

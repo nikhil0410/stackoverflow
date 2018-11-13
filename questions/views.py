@@ -7,6 +7,7 @@ from django.contrib.auth import login,authenticate,logout
 from django.template import RequestContext
 
 from .models import Question
+from answers.models import Answers
 from .forms import SignUpForm,LoginForm
 from stackoverflow.mixin import NextUrlMixin,RequestFormAttachMixin
 
@@ -73,17 +74,24 @@ class QuestionDetailView(DetailView):
 	template_name = 'questions/detail_view.html'
 	model = Question
 
+	def get_context_data(self, *args, **kwargs):
+		slug = self.kwargs.get('slug')
+		context = super(QuestionDetailView, self).get_context_data(*args, **kwargs)
+		question = Question.objects.filter(slug=slug).first()
+		answer = Answers.objects.filter(question_id = question.id)
+		context['answer'] = answer
+		return context
+
 	def get_object(self,*args,**kwargs):
 		request = self.request 
 		slug = self.kwargs.get('slug')
 
 		try:
 			instance = Question.objects.filter(slug=slug).first()
+			answer = Answers.objects.filter(question_id = instance.id)
+			print(answer)
 		except Question.DoesNotExist:
 			raise Http404('Question does not exist')
-		except Question.MultipleObjectReturned:
-			qs = Question.objects.filter(slug=slug)
-			instance = qs.first()
 		except :
 			raise http404('Dont know what you have done there')
 
