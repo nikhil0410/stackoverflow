@@ -8,6 +8,50 @@
       <title>Base Template</title>
         {% include 'base/css.html' %}
         {% block base_head %}{% endblock %}
+
+        <style type="text/css">
+            
+            .main-topic h3 {
+                padding: 10px;
+                border-bottom: 1px solid #ccc;
+            }
+            .feedback-buttons {
+                text-align: center;
+            }
+            .feedback-buttons button {
+                margin: 0 7px;
+            }
+            .topic-desc-inner {
+                padding-bottom: 30px;
+                border-bottom: 1px solid #ccc;
+            }
+            .comment-wrapper {
+                padding: 20px;
+            }
+            .comment-wrapper .comment-inner {
+                border-bottom: 1px solid #ccc;
+                padding: 10px;
+            }
+            .add-coomment {
+                margin: 10px 0;
+            }
+            .add-coomment a {
+                padding: 8px 20px;
+                display: inline-block;
+                text-decoration: none;
+                color: #fff;
+                background: #00b8ff;
+                border-radius: 25px;
+                font-weight: 600;
+                cursor: pointer;
+            }
+            .answer-wrapper h4 {
+                padding: 10px;
+                border-bottom: 1px solid #ccc;
+            }
+
+        </style>
+
     </head>
     <body>
       {% include 'base/navbar.html' with brand_name='eCommerce' %}
