@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login,logout
 from django.contrib.auth import get_user_model
 
+from answers.models import Answers 
+
 
 class SignUpForm(UserCreationForm):
 	first_name = forms.CharField(max_length=30, required=False, help_text='Optional.')
@@ -92,3 +94,15 @@ class LoginForm(forms.Form):
 		login(request, user)
 		self.user = user
 		return data
+
+class AnswerForm(forms.ModelForm):
+	class Meta:
+		model = Answers 
+		fields = ['answer_description']
+	def save(self,commit=True):
+
+		user = super(RegistrationForm, self).save(commit=False)
+		user.is_active = False
+		if commit:
+			user.save()
+		return user
