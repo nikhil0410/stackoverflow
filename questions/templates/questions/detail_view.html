@@ -109,7 +109,7 @@
 														</div>
 													</div>
                                                     {% endfor %}
-                                                    {{ form }}
+                                                    
                                                     <div class="add-ans">
                                                             <a href="javascript:void(0);" data-toggle="modal" data-target="#post-answer">Post Answer</a>
                                                     </div>
@@ -150,15 +150,20 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
+            <form method="post">
+            {% csrf_token %}
+                                            
             <button type="button" class="close" data-dismiss="modal">&times;</button>
           </div>
           <div class="modal-body">
-            <textarea placeholder="Enter Your Answer" rows="5" style="width:100%;"></textarea>
+            {{ form.as_p }}
+            <!-- <textarea placeholder="Enter Your Answer" rows="5" style="width:100%;"></textarea> -->
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-success">Submit</button>
+            <button type="submit" class="btn btn-success">Submit</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
+          </form>
         </div>
 
       </div>

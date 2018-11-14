@@ -101,7 +101,7 @@ class AnswerForm(forms.ModelForm):
 		fields = ['answer_description']
 	def save(self,commit=True):
 
-		user = super(RegistrationForm, self).save(commit=False)
+		user = super(AnswerForm, self).save(commit=False)
 		user.is_active = False
 		if commit:
 			user.save()

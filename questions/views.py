@@ -119,8 +119,18 @@ class QuestionDetailView(FormMixin, DetailView):
 
 def QuestionAnswers(request, slug=None, *args, **kwargs):
 	template_name = 'questions/detail_view.html'
-	form_class = AnswerForm
 	instance = Question.objects.filter(slug=slug).first()
+	if request.method == 'POST':
+		form = AnswerForm(request.POST)
+		if form.is_valid():
+			ans = form.save(commit = False)
+			ans.user = request.user 
+			ans.question_id = instance
+			ans.save()
+
+	# else:
+	form_class = AnswerForm()
+	
 	if instance is None:
 		raise Http404('No question found')
 
