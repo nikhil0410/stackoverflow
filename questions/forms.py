@@ -5,7 +5,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login,logout
 from django.contrib.auth import get_user_model
 
-from answers.models import Answers 
+from answers.models import Answers ,AnswersComment
+from questions.models import QuestionComment
 
 
 class SignUpForm(UserCreationForm):
@@ -106,3 +107,29 @@ class AnswerForm(forms.ModelForm):
 		if commit:
 			user.save()
 		return user
+
+
+class AnswerCommentForm(forms.ModelForm):
+	class Meta:
+		model = AnswersComment 
+		fields = ['comment_description']
+	def save(self,commit=True):
+
+		user = super(AnswerCommentForm, self).save(commit=False)
+		user.is_active = False
+		if commit:
+			user.save()
+		return user
+
+class QuestionCommentForm(forms.ModelForm):
+	class Meta:
+		model = QuestionComment 
+		fields = ['comment_description']
+	def save(self,commit=True):
+
+		user = super(QuestionCommentForm, self).save(commit=False)
+		user.is_active = False
+		if commit:
+			user.save()
+		return user		
+
