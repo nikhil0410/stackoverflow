@@ -6,9 +6,9 @@ from django.http import HttpResponse
 from django.views.generic.edit import FormMixin
 from django.template import RequestContext
 
-from .models import Question
-from answers.models import Answers
-from .forms import SignUpForm,LoginForm, AnswerForm
+from .models import Question,QuestionComment
+from answers.models import Answers,AnswersComment
+from .forms import SignUpForm,LoginForm, AnswerForm, AnswerCommentForm, QuestionCommentForm
 from stackoverflow.mixin import NextUrlMixin,RequestFormAttachMixin
 
 # Create your views here.
@@ -120,13 +120,33 @@ class QuestionDetailView(FormMixin, DetailView):
 def QuestionAnswers(request, slug=None, *args, **kwargs):
 	template_name = 'questions/detail_view.html'
 	instance = Question.objects.filter(slug=slug).first()
+	ans_comments = AnswersComment.objects.filter(answer_id__question_id = instance)
+	qus_comments = QuestionComment.objects.filter(question_id = instance)
 	if request.method == 'POST':
-		form = AnswerForm(request.POST)
-		if form.is_valid():
-			ans = form.save(commit = False)
-			ans.user = request.user 
-			ans.question_id = instance
-			ans.save()
+		if request.POST.get('answer'):
+			answer_coment_form = AnswerCommentForm(request.POST)
+			if answer_coment_form.is_valid():
+				ans_cmnt_form = answer_coment_form.save(commit = False)
+				ans_cmnt_form.user = request.user
+				ans_instance = Answers.objects.filter(pk=request.POST.get('answer_obj'))
+				ans_cmnt_form.answer_id = ans_instance.first()
+				ans_cmnt_form.save()
+		elif request.POST.get('answer'):
+			question_coment_form = QuestionCommentForm(request.POST)
+			if question_coment_form.is_valid():
+				qus_cmnt_form = question_coment_form.save(commit = False)
+				qus_cmnt_form.user = request.user
+				qus_cmnt_form.question_id = instance
+				qus_cmnt_form.save()
+
+
+		else:
+			form = AnswerForm(request.POST)
+			if form.is_valid():
+				ans = form.save(commit = False)
+				ans.user = request.user 
+				ans.question_id = instance
+				ans.save()
 
 	# else:
 	form_class = AnswerForm()
@@ -137,9 +157,14 @@ def QuestionAnswers(request, slug=None, *args, **kwargs):
 	answer = Answers.objects.filter(question_id = instance.id)
 	context = {
 		'object': instance,
-		'answer': answer 
+		'answer': answer,
+		'ans_comments': ans_comments,
+		'qus_comments': qus_comments 
 	}
+	print(ans_comments.values())
 	context['form'] = form_class
+	context['answer_coment_form'] = AnswerCommentForm
+	context['question_coment_form'] = QuestionCommentForm
 	return render(request,template_name,context)
 
 

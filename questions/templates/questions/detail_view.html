@@ -78,34 +78,45 @@
 												<div class="col-sm-10">
                                                     {% for a in answer %}
 													<div class="topic-desc-inner">
+														{{ a.pk }}
 														{{ a.answer_description}}
+														}
 													</div>
 													<div class="comment-wrapper">
+														{% for ans_comment in ans_comments %}
+														{% if ans_comment.answer_id_id == a.id %}
 														<div class="comment-inner">
-															Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-															tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-															quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-															consequat.
+															{{ ans_comment.comment_description }}
 														</div>
-														<div class="comment-inner">
-															Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-															tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-															quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-															consequat.
-														</div>
-														<div class="comment-inner">
-															Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-															tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-															quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-															consequat.
-														</div><div class="comment-inner">
-															Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-															tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-															quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-															consequat.
-														</div>
+														{% endif %}
+														{% endfor %}
 														<div class="add-coomment">
 															<a href="javascript:void(0);" data-toggle="modal" data-target="#add-comment">Add A Comment</a>
+														</div>
+														<div id="add-comment" class="modal fade" role="dialog">
+														  <div class="modal-dialog">
+													        <div class="modal-content">
+													        	<form method="post">
+													          <div class="modal-header">
+													            
+													            {% csrf_token %}
+													                                            
+													            <button type="button" class="close" data-dismiss="modal">&times;</button>
+													          </div>
+													          <div class="modal-body">
+													            {{ answer_coment_form.as_p }}
+													            <!-- <textarea placeholder="Enter Your Answer" rows="5" style="width:100%;"></textarea> -->
+													          </div>
+													          <div class="modal-footer">
+													          	<input type="hidden" name="answer" value="1">
+																<input type="text" name="answer_obj" value="{{ a.pk }}">
+													            <button type="submit" class="btn btn-success">Submit</button>
+													            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+													          </div>
+													          </form>
+													        </div>
+
+													      </div>
 														</div>
 													</div>
                                                     {% endfor %}
@@ -130,27 +141,36 @@
 
     <div id="add-comment" class="modal fade" role="dialog">
 	  <div class="modal-dialog">
-		<div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal">&times;</button>
-	      </div>
-	      <div class="modal-body">
-	      	<textarea placeholder="Enter Your Comments" rows="5" style="width:100%;"></textarea>
-	      </div>
-	      <div class="modal-footer">
-	      	<button type="button" class="btn btn-success">Submit</button>
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	      </div>
-	    </div>
+        <div class="modal-content">
+        	<form method="post">
+          <div class="modal-header">
+            
+            {% csrf_token %}
+                                            
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            {{ answer_coment_form.as_p }}
+            <!-- <textarea placeholder="Enter Your Answer" rows="5" style="width:100%;"></textarea> -->
+          </div>
+          <div class="modal-footer">
+          	<input type="text" name="answer" value="1">
+			<input type="text" name="answer_obj" value="{{ a.pk }}">
+            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+          </form>
+        </div>
 
-	  </div>
+      </div>
 	</div>
 
     <div id="post-answer" class="modal fade" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
+        	<form method="post">
           <div class="modal-header">
-            <form method="post">
+            
             {% csrf_token %}
                                             
             <button type="button" class="close" data-dismiss="modal">&times;</button>
