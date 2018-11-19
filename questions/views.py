@@ -5,6 +5,7 @@ from django.contrib.auth import login,authenticate,logout
 from django.http import HttpResponse
 from django.views.generic.edit import FormMixin
 from django.template import RequestContext
+from django.contrib.auth import get_user_model
 
 from .models import Question,QuestionComment
 from answers.models import Answers,AnswersComment
@@ -47,6 +48,17 @@ class LoginView(NextUrlMixin,RequestFormAttachMixin, FormView):
 	def form_valid(self,form):
 		next_path = self.get_next_url()
 		return redirect(next_path)
+
+def authenticate(self, username=None, password=None, **kwargs):
+    UserModel = get_user_model()
+    try:
+        user = UserModel.objects.get(email=username)
+    except UserModel.DoesNotExist:
+        return None
+    else:
+        if user.check_password(password):
+            return user
+    return None
 
 def login_user(request):
 	logout(request)
@@ -167,7 +179,9 @@ def QuestionAnswers(request, slug=None, *args, **kwargs):
 	context['question_coment_form'] = QuestionCommentForm
 	return render(request,template_name,context)
 
-
+def user_logout(request):
+	logout(request)
+	return render(request,'questions/list.html')
 
 
 
