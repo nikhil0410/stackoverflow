@@ -16,13 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from django.conf.urls import url
-from questions.views import login_user,question_list,user_logout
+from questions.views import question_list,user_logout
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url('question/',include(('questions.urls','questions'), namespace='question')),
-    path('login/',login_user,name='login'),
+    # path('login/',login_user,name='login'),
     path('',question_list,name='list'),
     path('logout/', user_logout,name='logout')
 ]

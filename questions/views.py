@@ -49,31 +49,20 @@ class LoginView(NextUrlMixin,RequestFormAttachMixin, FormView):
 		next_path = self.get_next_url()
 		return redirect(next_path)
 
-def authenticate(self, username=None, password=None, **kwargs):
-    UserModel = get_user_model()
-    try:
-        user = UserModel.objects.get(email=username)
-    except UserModel.DoesNotExist:
-        return None
-    else:
-        if user.check_password(password):
-            return user
-    return None
+# def login_user(request):
+# 	logout(request)
+# 	username = password = ''
+# 	form_class = LoginForm
+# 	if request.POST:
+# 		username = request.POST['username']
+# 		password = request.POST['password']
 
-def login_user(request):
-	logout(request)
-	username = password = ''
-	form_class = LoginForm
-	if request.POST:
-		username = request.POST['username']
-		password = request.POST['password']
-
-		user = authenticate(username=username, password=password)
-		if user is not None:
-			if user.is_active:
-				login(request, user)
-				return HttpResponseRedirect('/main/')
-	return render(request,'questions/login.html',{'form':form_class})
+# 		user = authenticate(username=username, password=password)
+# 		if user is not None:
+# 			if user.is_active:
+# 				login(request, user)
+# 				return HttpResponseRedirect('/main/')
+# 	return render(request,'questions/login.html',{'form':form_class})
 
 
 class CreateQuestion(CreateView):
@@ -134,16 +123,19 @@ def QuestionAnswers(request, slug=None, *args, **kwargs):
 	instance = Question.objects.filter(slug=slug).first()
 	ans_comments = AnswersComment.objects.filter(answer_id__question_id = instance)
 	qus_comments = QuestionComment.objects.filter(question_id = instance)
+	print(1)
 	if request.method == 'POST':
+		print('inside post')
 		if request.POST.get('answer'):
 			answer_coment_form = AnswerCommentForm(request.POST)
+			print(answer_coment_form)
 			if answer_coment_form.is_valid():
 				ans_cmnt_form = answer_coment_form.save(commit = False)
 				ans_cmnt_form.user = request.user
 				ans_instance = Answers.objects.filter(pk=request.POST.get('answer_obj'))
 				ans_cmnt_form.answer_id = ans_instance.first()
 				ans_cmnt_form.save()
-		elif request.POST.get('answer'):
+		elif request.POST.get('question'):
 			question_coment_form = QuestionCommentForm(request.POST)
 			if question_coment_form.is_valid():
 				qus_cmnt_form = question_coment_form.save(commit = False)

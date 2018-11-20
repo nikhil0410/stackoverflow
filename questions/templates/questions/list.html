@@ -3,10 +3,11 @@
 {% block content %}
         <div class='row'>
     {% for obj in questions %}
+    <a href="{% url 'question:question-answers' slug=obj.slug %}">
         <div class='col my-3'>
         {{ obj.title }}  
-        
         </div>
+        </a>
     {% endfor %}
 </div>
 {% endblock %}
