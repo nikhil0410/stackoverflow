@@ -2,10 +2,11 @@ from django.shortcuts import render,render_to_response,redirect
 from django.views.generic import CreateView,FormView, DetailView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login,authenticate,logout
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect
 from django.views.generic.edit import FormMixin
 from django.template import RequestContext
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 from .models import Question,QuestionComment
 from answers.models import Answers,AnswersComment
@@ -69,6 +70,15 @@ class CreateQuestion(CreateView):
 	model = Question
 	fields = ['title','description']
 	template_name = 'questions/create-question.html'
+
+	def form_valid(self,form):
+		# form = form.save(commit=False)
+		# print(form.user)
+		form.instance.user = self.request.user 
+		# a = form.save()
+		# print(a)
+		return super().form_valid(form)
+
 
 
 class QuestionDetailView(FormMixin, DetailView):

@@ -1,6 +1,6 @@
 {% url 'question:list' as home_url %}
 {% url 'question:list' as contact_url %}
-{% url 'question:list' as product_list_url %}
+{% url 'question:create-question' as create_question_url %}
 {% url 'question:login' as login_url %}
 {% url 'logout' as logout_url %}
 {% url 'question:signup' as register_url %}
@@ -26,8 +26,8 @@
       <li class="nav-item {% if request.path == contact_url %}active{% endif %}">
         <a class="nav-link" href="{{ contact_url }}">Contact</a>
       </li>
-      <li class="nav-item {% if request.path == product_list_url %}active{% endif %}">
-        <a class="nav-link" href="{{ product_list_url }}">Products</a>
+      <li class="nav-item {% if request.path == create_question_url %}active{% endif %}">
+        <a class="nav-link" href="{{ create_question_url }}">Ask Question</a>
       </li>
 
 
