@@ -16,6 +16,8 @@ class Question(models.Model):
 	user 			= models.ForeignKey(User, null=True, blank=True, on_delete=None)
 	slug            = models.SlugField(blank=True, unique=True)
 	description     = models.TextField()
+	upvote_count	= models.IntegerField(default=0)
+	downvote_count	= models.IntegerField(default=0)
 	featured        = models.BooleanField(default=False)
 	active          = models.BooleanField(default=True)
 	timestamp       = models.DateTimeField(auto_now_add=True)

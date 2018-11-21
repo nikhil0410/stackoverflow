@@ -21,7 +21,7 @@
 									<div class="col-sm-2">
 										<div class="feedback-buttons">
 											<button class="btn"><i class="fa fa-caret-up" aria-hidden="true"></i></button>
-											<span>1</span>
+											<span>{{ object.upvote_count|add:object.downvote_count }}</span>
 											<button class="btn"><i class="fa fa-caret-down" aria-hidden="true"></i></button>
 										</div>
 									</div>
