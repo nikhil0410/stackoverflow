@@ -18,6 +18,7 @@ class Question(models.Model):
 	description     = models.TextField()
 	upvote_count	= models.IntegerField(default=0)
 	downvote_count	= models.IntegerField(default=0)
+	total_count		= models.IntegerField(default=0)
 	featured        = models.BooleanField(default=False)
 	active          = models.BooleanField(default=True)
 	timestamp       = models.DateTimeField(auto_now_add=True)
@@ -44,9 +45,19 @@ class QuestionComment(models.Model):
 	comment_description 	= models.TextField()
 	upvote_count			= models.IntegerField(default=0)
 	downvote_count			= models.IntegerField(default=0)
+	total_count				= models.IntegerField(default=0)
 	featured        		= models.BooleanField(default=False)
 	active          		= models.BooleanField(default=True)
 	timestamp      	 		= models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
-		return self.comment_description or ''
+		return self.comment_description 
+
+
+def question_total_count(sender, instance, *args, **kwargs):
+	instance.total_count = instance.upvote_count - instance.downvote_count
+	print(instance.total_count)
+	# instance.save()
+
+pre_save.connect(question_total_count, sender = Question)
+pre_save.connect(question_total_count, sender = QuestionComment)

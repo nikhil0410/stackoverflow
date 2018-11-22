@@ -21,7 +21,7 @@
 									<div class="col-sm-2">
 										<div class="feedback-buttons">
 											<button class="btn"><i class="fa fa-caret-up" aria-hidden="true"></i></button>
-											<span>{{ object.upvote_count|add:object.downvote_count }}</span>
+											<span>{{ object.total_count }}</span>
 											<button class="btn"><i class="fa fa-caret-down" aria-hidden="true"></i></button>
 										</div>
 									</div>
@@ -45,24 +45,25 @@
 							<div class="answer-wrapper">
 								<div class="row">
 									<div class="col-sm-12">
-										<h4>10 Answers</h4>
+										<h4>{{ answer.count }} Answers</h4>
 									</div>
 									<div class="col-sm-12">
 										<div class="answer-inner">
+											{% for a in answer %}
 											<div class="row">
+
 												<div class="col-sm-2">
 													<div class="feedback-buttons">
 														<button class="btn"><i class="fa fa-caret-up" aria-hidden="true"></i></button>
-														<span>1</span>
+														<span>{{ a.total_count }}</span>
 														<button class="btn"><i class="fa fa-caret-down" aria-hidden="true"></i></button>
 													</div>
 												</div>
 												<div class="col-sm-10">
-                                                    {% for a in answer %}
+                                                    
 													<div class="topic-desc-inner">
-														{{ a.pk }}
 														{{ a.answer_description}}
-														}
+														
 													</div>
 													<div class="comment-wrapper">
 														{% for ans_comment in ans_comments %}
@@ -101,13 +102,15 @@
 													      </div>
 														</div>
 													</div>
-                                                    {% endfor %}
                                                     
-                                                    <div class="add-ans">
-                                                            <a href="javascript:void(0);" data-toggle="modal" data-target="#post-answer">Post Answer</a>
-                                                    </div>
+                                                    
+                                                    
 												</div>
 											</div>
+											{% endfor %}
+											<div class="add-ans">
+                                                            <a href="javascript:void(0);" data-toggle="modal" data-target="#post-answer">Post Answer</a>
+                                                    </div>
 										</div>
 									</div>
 								</div>
