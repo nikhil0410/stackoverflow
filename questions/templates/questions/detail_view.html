@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load questions_tags %}
 
 
 {% block content %}
@@ -21,7 +22,7 @@
 									<div class="col-sm-2">
 										<div class="feedback-buttons">
 											<button class="btn"><i class="fa fa-caret-up" aria-hidden="true"></i></button>
-											<span>{{ object.total_count }}</span>
+											<span>{{ object.upvote_count|subtractss:object.downvote_count }}</span>
 											<button class="btn"><i class="fa fa-caret-down" aria-hidden="true"></i></button>
 										</div>
 									</div>

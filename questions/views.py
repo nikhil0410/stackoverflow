@@ -13,6 +13,8 @@ from answers.models import Answers,AnswersComment
 from .forms import SignUpForm,LoginForm, AnswerForm, AnswerCommentForm, QuestionCommentForm
 from stackoverflow.mixin import NextUrlMixin,RequestFormAttachMixin
 
+
+
 # Create your views here.
 def question_list(request):
 	question = Question.objects.all()
@@ -133,12 +135,9 @@ def QuestionAnswers(request, slug=None, *args, **kwargs):
 	instance = Question.objects.filter(slug=slug).first()
 	ans_comments = AnswersComment.objects.filter(answer_id__question_id = instance)
 	qus_comments = QuestionComment.objects.filter(question_id = instance)
-	print(1)
 	if request.method == 'POST':
-		print('inside post')
 		if request.POST.get('answer'):
 			answer_coment_form = AnswerCommentForm(request.POST)
-			print(answer_coment_form)
 			if answer_coment_form.is_valid():
 				ans_cmnt_form = answer_coment_form.save(commit = False)
 				ans_cmnt_form.user = request.user
@@ -161,8 +160,6 @@ def QuestionAnswers(request, slug=None, *args, **kwargs):
 				ans.user = request.user 
 				ans.question_id = instance
 				ans.save()
-
-	# else:
 	form_class = AnswerForm()
 	
 	if instance is None:
@@ -175,7 +172,6 @@ def QuestionAnswers(request, slug=None, *args, **kwargs):
 		'ans_comments': ans_comments,
 		'qus_comments': qus_comments 
 	}
-	print(ans_comments.values())
 	context['form'] = form_class
 	context['answer_coment_form'] = AnswerCommentForm
 	context['question_coment_form'] = QuestionCommentForm
