@@ -23,7 +23,7 @@
 										<div class="feedback-buttons">
 											<button class="btn question_upvote" onclick="increase_upvote('{{ object.pk }}','question')"><i class="fa fa-caret-up" aria-hidden="true"></i></button>
 											<span id='question_vote_count'>{{ object.upvote_count|subtractss:object.downvote_count }}</span>
-											<button class="btn"><i class="fa fa-caret-down" aria-hidden="true"></i></button>
+											<button class="btn question_downvote" onclick="decrease_upvote('{{ object.pk }}','question')"><i class="fa fa-caret-down" aria-hidden="true"></i></button>
 										</div>
 									</div>
 									<div class="col-sm-10">
@@ -103,9 +103,6 @@
 													      </div>
 														</div>
 													</div>
-                                                    
-                                                    
-                                                    
 												</div>
 											</div>
 											{% endfor %}
@@ -193,6 +190,24 @@
           if (data.type == 'question') {
             var count = $('#question_vote_count').text();
             count = Number(count) + 1;
+            $('#question_vote_count').text(count);
+          }
+        }
+      });
+
+	}
+	function decrease_upvote(id,type){
+		$.ajax({
+        url: '/question/downvote/',
+        data: {
+          'id': id,
+          'type':type
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.type == 'question') {
+            var count = $('#question_vote_count').text();
+            count = Number(count) - 1;
             $('#question_vote_count').text(count);
           }
         }

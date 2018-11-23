@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 from django.conf.urls import url
-from .views import question_list,signup,LoginView,CreateQuestion,QuestionDetailView,QuestionAnswers,upvote
+from .views import question_list,signup,LoginView,CreateQuestion,QuestionDetailView,QuestionAnswers,upvote, downvote
 
 urlpatterns = [
     path('list',question_list,name='list'),
@@ -25,4 +25,5 @@ urlpatterns = [
     path('detail-view/<slug:slug>/', QuestionDetailView.as_view(), name='question-detail'),
     path('question/ans/<slug:slug>/', QuestionAnswers, name='question-answers'),
     path('upvote/', upvote, name='upvote'),
+    path('downvote/', downvote, name='downvote'),
 ]

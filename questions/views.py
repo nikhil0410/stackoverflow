@@ -195,6 +195,18 @@ def upvote(request):
 	}
 	return JsonResponse(data)
 
+def downvote(request):
+	question_id = request.GET.get('id',None)
+	question_type = request.GET.get('type',None)
+	if question_type == 'question':
+		que_qs = Question.objects.filter(pk = question_id).first()
+		que_qs.upvote_count -= 1
+		que_qs.save()
+	data = {
+		'id':question_id,
+		'type': question_type
+	}
+	return JsonResponse(data)
 
 
 
