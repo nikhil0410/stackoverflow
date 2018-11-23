@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'questions',
-    'answers'
+    'answers',
+    'froala_editor'
 ]
 
 MIDDLEWARE = [
@@ -108,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+FROALA_INCLUDE_JQUERY = False
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/

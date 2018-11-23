@@ -6,6 +6,7 @@ from django.conf import settings
 from django.db.models import Q
 from django.db.models.signals import pre_save, post_save
 from django.urls import reverse
+from froala_editor.fields import FroalaField
 from stackoverflow.utils import unique_slug_generator
 
 User = settings.AUTH_USER_MODEL
@@ -15,7 +16,7 @@ class Question(models.Model):
 	title           = models.CharField(max_length=120)
 	user 			= models.ForeignKey(User, null=True, blank=True, on_delete=None)
 	slug            = models.SlugField(blank=True, unique=True)
-	description     = models.TextField()
+	description     = FroalaField()
 	upvote_count	= models.IntegerField(default=0)
 	downvote_count	= models.IntegerField(default=0)
 	total_count		= models.IntegerField(default=0)
@@ -42,7 +43,7 @@ pre_save.connect(question_pre_save_receiver, sender=Question)
 class QuestionComment(models.Model):
 	question_id 			= models.ForeignKey(Question,on_delete=None)
 	user 					= models.ForeignKey(User,on_delete=None)
-	comment_description 	= models.TextField()
+	comment_description 	= FroalaField()
 	upvote_count			= models.IntegerField(default=0)
 	downvote_count			= models.IntegerField(default=0)
 	total_count				= models.IntegerField(default=0)

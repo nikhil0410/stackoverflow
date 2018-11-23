@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout
 from django.contrib.auth import get_user_model
+from froala_editor.widgets import FroalaEditor
 
 from answers.models import Answers ,AnswersComment
 from questions.models import QuestionComment
@@ -97,9 +98,12 @@ class LoginForm(forms.Form):
 		return data
 
 class AnswerForm(forms.ModelForm):
+	
 	class Meta:
 		model = Answers 
 		fields = ['answer_description']
+
+
 	def save(self,commit=True):
 
 		user = super(AnswerForm, self).save(commit=False)
@@ -122,6 +126,12 @@ class AnswerCommentForm(forms.ModelForm):
 		return user
 
 class QuestionCommentForm(forms.ModelForm):
+	content = forms.CharField(widget=FroalaEditor(options={
+	    'toolbarInline': True,
+		'charCounterCount': False,
+		'toolbarButtons': ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '-', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'indent', 'outdent', '-', 'insertImage', 'insertLink', 'insertFile', 'insertVideo', 'undo', 'redo'],
+		'toolbarVisibleWithoutSelection': True
+	  }))
 	class Meta:
 		model = QuestionComment 
 		fields = ['comment_description']
