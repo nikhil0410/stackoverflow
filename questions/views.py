@@ -7,6 +7,7 @@ from django.views.generic.edit import FormMixin
 from django.template import RequestContext
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.http import JsonResponse
 
 from .models import Question,QuestionComment
 from answers.models import Answers,AnswersComment
@@ -180,6 +181,20 @@ def QuestionAnswers(request, slug=None, *args, **kwargs):
 def user_logout(request):
 	logout(request)
 	return render(request,'questions/list.html')
+
+def upvote(request):
+	question_id = request.GET.get('id',None)
+	question_type = request.GET.get('type',None)
+	if question_type == 'question':
+		que_qs = Question.objects.filter(pk = question_id).first()
+		que_qs.upvote_count += 1
+		que_qs.save()
+	data = {
+		'id':question_id,
+		'type': question_type
+	}
+	return JsonResponse(data)
+
 
 
 
