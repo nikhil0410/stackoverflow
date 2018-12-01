@@ -17,18 +17,18 @@ from stackoverflow.mixin import NextUrlMixin,RequestFormAttachMixin
 
 
 
-# Create your views here.
 def question_list(request):
-	question = Question.objects.raw('select questions_question.*,count(questions_question.id),answers_answers.id as count from questions_question left join answers_answers on answers_answers.question_id_id = questions_question.id group by questions_question.id')
+	question = Question.objects.raw('''
+		SELECT questions_question.*,count(questions_question.id) as count ,answers_answers.id as answer_id
+		FROM questions_question 
+		LEFT JOIN answers_answers on answers_answers.question_id_id = questions_question.id 
+		GROUP BY questions_question.id 
+		ORDER BY questions_question.timestamp DESC
+		''')
 	context = {
 		'questions': question
 	}
 	return render(request,'questions/list.html',context)
-
-# class RegisterView(CreateView):
-# 	form_class = RegistrationForm
-# 	template_name = 'questions/register.html'
-# 	success_url = '/login/'
 
 def signup(request):
 	if request.method == 'POST':
@@ -54,35 +54,14 @@ class LoginView(NextUrlMixin,RequestFormAttachMixin, FormView):
 		next_path = self.get_next_url()
 		return redirect(next_path)
 
-# def login_user(request):
-# 	logout(request)
-# 	username = password = ''
-# 	form_class = LoginForm
-# 	if request.POST:
-# 		username = request.POST['username']
-# 		password = request.POST['password']
-
-# 		user = authenticate(username=username, password=password)
-# 		if user is not None:
-# 			if user.is_active:
-# 				login(request, user)
-# 				return HttpResponseRedirect('/main/')
-# 	return render(request,'questions/login.html',{'form':form_class})
-
-
 class CreateQuestion(CreateView):
 	model = Question
 	fields = ['title','description']
 	template_name = 'questions/create-question.html'
 
 	def form_valid(self,form):
-		# form = form.save(commit=False)
-		# print(form.user)
-		form.instance.user = self.request.user 
-		# a = form.save()
-		# print(a)
+		form.instance.user = self.request.user
 		return super().form_valid(form)
-
 
 
 class QuestionDetailView(FormMixin, DetailView):
@@ -102,7 +81,6 @@ class QuestionDetailView(FormMixin, DetailView):
 	def get_object(self,*args,**kwargs):
 		request = self.request 
 		slug = self.kwargs.get('slug')
-
 		try:
 			instance = Question.objects.filter(slug=slug).first()
 			answer = Answers.objects.filter(question_id = instance.id)
@@ -111,7 +89,6 @@ class QuestionDetailView(FormMixin, DetailView):
 		except :
 			raise http404('Dont know what you have done there')
 
-		# print(instance.values())
 		return instance
 
 	def post(self, request, *args, **kwargs):
@@ -130,8 +107,6 @@ class QuestionDetailView(FormMixin, DetailView):
 		return super().form_valid(form)
 
 
-
-
 def QuestionAnswers(request, slug=None, *args, **kwargs):
 	template_name = 'questions/detail_view.html'
 	instance = Question.objects.filter(slug=slug).first()
@@ -141,27 +116,11 @@ def QuestionAnswers(request, slug=None, *args, **kwargs):
 	qus_comments = QuestionComment.objects.filter(question_id = instance)
 	if request.method == 'POST':
 		if request.POST.get('answer'):
-			answer_coment_form = AnswerCommentForm(request.POST)
-			if answer_coment_form.is_valid():
-				ans_cmnt_form = answer_coment_form.save(commit = False)
-				ans_cmnt_form.user = request.user
-				ans_instance = Answers.objects.filter(pk=request.POST.get('answer_obj'))
-				ans_cmnt_form.answer_id = ans_instance.first()
-				ans_cmnt_form.save()
+			save_answer_comment(request)
 		elif request.POST.get('question'):
-			question_coment_form = QuestionCommentForm(request.POST)
-			if question_coment_form.is_valid():
-				qus_cmnt_form = question_coment_form.save(commit = False)
-				qus_cmnt_form.user = request.user
-				qus_cmnt_form.question_id = instance
-				qus_cmnt_form.save()
+			save_question_comment(instance, request)
 		else:
-			form = AnswerForm(request.POST)
-			if form.is_valid():
-				ans = form.save(commit = False)
-				ans.user = request.user 
-				ans.question_id = instance
-				ans.save()
+			save_answer(instance, request)
 	form_class = AnswerForm()
 	
 	if instance is None:
@@ -172,12 +131,37 @@ def QuestionAnswers(request, slug=None, *args, **kwargs):
 		'object': instance,
 		'answer': answer,
 		'ans_comments': ans_comments,
-		'qus_comments': qus_comments 
+		'qus_comments': qus_comments,
+		'form': form_class,
+		'answer_coment_form': AnswerCommentForm,
+		'question_coment_form': QuestionCommentForm
 	}
-	context['form'] = form_class
-	context['answer_coment_form'] = AnswerCommentForm
-	context['question_coment_form'] = QuestionCommentForm
 	return render(request,template_name,context)
+
+def save_answer_comment(request):
+	answer_coment_form = AnswerCommentForm(request.POST)
+	if answer_coment_form.is_valid():
+		ans_cmnt_form = answer_coment_form.save(commit = False)
+		ans_cmnt_form.user = request.user
+		ans_instance = Answers.objects.filter(pk=request.POST.get('answer_obj'))
+		ans_cmnt_form.answer_id = ans_instance.first()
+		ans_cmnt_form.save()
+
+def save_question_comment(instance, request):
+	question_coment_form = QuestionCommentForm(request.POST)
+	if question_coment_form.is_valid():
+		qus_cmnt_form = question_coment_form.save(commit = False)
+		qus_cmnt_form.user = request.user
+		qus_cmnt_form.question_id = instance
+		qus_cmnt_form.save()
+
+def save_answer(instance, request):
+	form = AnswerForm(request.POST)
+	if form.is_valid():
+		ans = form.save(commit = False)
+		ans.user = request.user 
+		ans.question_id = instance
+		ans.save()
 
 def user_logout(request):
 	logout(request)
@@ -208,25 +192,3 @@ def downvote(request):
 		'type': question_type
 	}
 	return JsonResponse(data)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

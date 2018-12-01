@@ -33,7 +33,7 @@
 										<div class="comment-wrapper">
 											{% for qus_comment in qus_comments %}
 											<div class="comment-inner">
-												{{ qus_comment.comment_description }}
+												{{ qus_comment.comment_description|safe }}
 											</div>
 											{% endfor %}
 											<div class="add-coomment">
@@ -63,14 +63,14 @@
 												<div class="col-sm-10">
                                                     
 													<div class="topic-desc-inner">
-														{{ a.answer_description}}
+														{{ a.answer_description|safe }}
 														
 													</div>
 													<div class="comment-wrapper">
 														{% for ans_comment in ans_comments %}
 														{% if ans_comment.answer_id_id == a.id %}
 														<div class="comment-inner">
-															{{ ans_comment.comment_description }}
+															{{ ans_comment.comment_description|safe }}
 														</div>
 														{% endif %}
 														{% endfor %}
