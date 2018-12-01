@@ -10,11 +10,17 @@
     					<span>votes</span>
     				</div>
     				<div class="col-md-4 votes">
-    					<span>1</span>
+    					<span>
+	    					{% if obj.count %}
+	    						{{ obj.count }}
+	    					{% else %}
+	    						0
+	    					{% endif %}
+    					</span>
     					<span>answers</span>
     				</div>
     				<div class="col-md-4 votes">
-    					<span>1</span>
+    					<span>{{ obj.views }}</span>
     					<span>views</span>
     				</div>
     			</div>

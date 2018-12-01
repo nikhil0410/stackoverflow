@@ -8,6 +8,7 @@ from django.template import RequestContext
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.http import JsonResponse
+from django.db.models import Count
 
 from .models import Question,QuestionComment
 from answers.models import Answers,AnswersComment
@@ -18,7 +19,7 @@ from stackoverflow.mixin import NextUrlMixin,RequestFormAttachMixin
 
 # Create your views here.
 def question_list(request):
-	question = Question.objects.all()
+	question = Question.objects.raw('select questions_question.*,count(questions_question.id),answers_answers.id as count from questions_question left join answers_answers on answers_answers.question_id_id = questions_question.id group by questions_question.id')
 	context = {
 		'questions': question
 	}
@@ -134,6 +135,8 @@ class QuestionDetailView(FormMixin, DetailView):
 def QuestionAnswers(request, slug=None, *args, **kwargs):
 	template_name = 'questions/detail_view.html'
 	instance = Question.objects.filter(slug=slug).first()
+	instance.views += 1
+	instance.save()
 	ans_comments = AnswersComment.objects.filter(answer_id__question_id = instance)
 	qus_comments = QuestionComment.objects.filter(question_id = instance)
 	if request.method == 'POST':
@@ -152,8 +155,6 @@ def QuestionAnswers(request, slug=None, *args, **kwargs):
 				qus_cmnt_form.user = request.user
 				qus_cmnt_form.question_id = instance
 				qus_cmnt_form.save()
-
-
 		else:
 			form = AnswerForm(request.POST)
 			if form.is_valid():

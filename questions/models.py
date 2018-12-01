@@ -11,7 +11,7 @@ from stackoverflow.utils import unique_slug_generator
 
 User = settings.AUTH_USER_MODEL
 
-# Create your models here.
+
 class Question(models.Model):
 	title           = models.CharField(max_length=120)
 	user 			= models.ForeignKey(User, null=True, blank=True, on_delete=None)
@@ -23,6 +23,7 @@ class Question(models.Model):
 	featured        = models.BooleanField(default=False)
 	active          = models.BooleanField(default=True)
 	timestamp       = models.DateTimeField(auto_now_add=True)
+	views			= models.IntegerField(default=0)
 
 
 
