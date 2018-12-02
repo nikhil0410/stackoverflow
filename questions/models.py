@@ -58,7 +58,6 @@ class QuestionComment(models.Model):
 
 def question_total_count(sender, instance, *args, **kwargs):
 	instance.total_count = instance.upvote_count - instance.downvote_count
-	print(instance.total_count)
 	# instance.save()
 
 pre_save.connect(question_total_count, sender = Question)
