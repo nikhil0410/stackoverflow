@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'questions',
     'answers',
     'froala_editor',
-    'tag'
+    'tag',
+    'chat',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -76,6 +78,15 @@ WSGI_APPLICATION = 'stackoverflow.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+ASGI_APPLICATION = "stackoverflow.routing.application"
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 DATABASES = {
     'default': {

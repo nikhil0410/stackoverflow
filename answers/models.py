@@ -11,7 +11,7 @@ class Answers(models.Model):
 	upvote_count		= models.IntegerField(default=0)
 	downvote_count		= models.IntegerField(default=0)
 	total_count			= models.IntegerField(default=0)
-	featured        	= models.BooleanField(default=False)
+	featured			= models.BooleanField(default=False)
 	active          	= models.BooleanField(default=True)
 	timestamp      	 	= models.DateTimeField(auto_now_add=True)
 

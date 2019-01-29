@@ -24,5 +24,6 @@ urlpatterns = [
     url('question/',include(('questions.urls','questions'), namespace='question')),
     # path('login/',login_user,name='login'),
     path('',question_list,name='list'),
-    path('logout/', user_logout,name='logout')
+    path('logout/', user_logout,name='logout'),
+    url(r'^chat/', include('chat.urls')),
 ]
